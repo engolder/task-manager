@@ -44,6 +44,12 @@
 - Frontend/Backend/공통 영역별로 적절한 가이드라인 파일에 자동 매핑
 - 상세한 가이드라인: `.claude/commands/guide-sync.md` 참조
 
+### 2.3 E2E 테스트
+**전체 앱 통합 테스트는 `make test-e2e` 명령어를 사용하세요.**
+- Frontend(React) + Backend(Go) 전체 통합 테스트
+- Playwright 기반 브라우저 자동화 테스트
+- GitHub Actions에서 자동 실행 (main 브랜치 push/PR 시)
+
 ## 3. 품질 관리
 
 ### 3.1 코드 수정 원칙

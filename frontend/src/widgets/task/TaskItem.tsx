@@ -11,7 +11,7 @@ interface TaskItemProps {
 
 export const TaskItem: FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
   return (
-    <div className={styles.item}>
+    <div className={styles.item} data-testid="task-item">
       <Checkbox.Root
         className={styles.checkbox}
         checked={task.completed}

@@ -1,4 +1,4 @@
-.PHONY: dev dev-frontend dev-backend
+.PHONY: dev dev-frontend dev-backend test-e2e
 
 # Frontend
 dev-frontend:
@@ -14,3 +14,8 @@ dev:
 	@$(MAKE) dev-backend &
 	@$(MAKE) dev-frontend &
 	@wait
+
+# E2E Tests
+test-e2e:
+	@echo "Running E2E tests..."
+	cd frontend && yarn test:e2e

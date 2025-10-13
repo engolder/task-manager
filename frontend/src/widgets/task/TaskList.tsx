@@ -65,7 +65,7 @@ export const TaskList: FC = () => {
         <h1 className={styles.title}>작업 목록</h1>
       </header>
 
-      <div className={styles.list}>
+      <div className={styles.list} data-testid="task-list">
         {tasks.map((task: Task) => (
           <TaskItem
             key={task.id}
