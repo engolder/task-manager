@@ -23,16 +23,24 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: yarn install --frozen-lockfile
+      - name: Install dependencies in parallel
+        run: |
+          set -e
+          cd frontend && yarn install --frozen-lockfile &
+          PID1=$!
+          cd backend && go mod download &
+          PID2=$!
+          wait $PID1 $PID2
 
-      - name: Install Playwright
-        working-directory: ./frontend
-        run: npx playwright install --with-deps chromium
-
-      - name: Start application
-        run: make dev &
+      - name: Install Playwright and start application
+        run: |
+          set -e
+          cd frontend && npx playwright install --with-deps chromium &
+          PID1=$!
+          make dev &
+          PID2=$!
+          wait $PID1
+          # Don't wait for PID2 (make dev) as it runs in background
 
       - name: Run E2E tests
         run: make test-e2e
