@@ -50,7 +50,7 @@
 - Playwright 기반 브라우저 자동화 테스트
 - GitHub Actions에서 자동 실행 (main 브랜치 push/PR 시)
 - **사전 조건**: `make dev`로 서버 실행 후 테스트 (자동으로 서비스 준비 상태 확인)
-- 서비스 대기 로직: `scripts/wait-for-services.sh` (5초 타임아웃)
+- 서비스 대기 로직: `scripts/wait-for-services.sh` (10초 타임아웃)
 
 ## 3. 품질 관리
 

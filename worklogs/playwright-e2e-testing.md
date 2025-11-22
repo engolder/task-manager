@@ -20,10 +20,10 @@ TodoList 앱에 E2E 테스팅 환경 구축 및 실행 흐름 개선
 
 **구현**: `scripts/wait-for-services.sh` 생성
 - lsof로 포트 8080, 5173 체크
-- 5초 타임아웃 (즉시 실패하지 않고 재시도)
+- 10초 타임아웃 (즉시 실패하지 않고 재시도)
 - 타임아웃 시 명확한 에러 메시지
 
-**타임아웃 5초 선택 이유**: 로컬 환경에서 충분하면서도 너무 길지 않아 빠른 피드백 가능
+**타임아웃 10초 선택 이유**: 로컬 환경에서 충분하면서도 너무 길지 않아 빠른 피드백 가능
 
 ### 3. CI에서도 make dev 사용
 **이유**:
@@ -53,14 +53,14 @@ TodoList 앱에 E2E 테스팅 환경 구축 및 실행 흐름 개선
 
 ## 최종 구조
 ```
-scripts/wait-for-services.sh  # 5초간 포트 체크 + 재시도
+scripts/wait-for-services.sh  # 10초간 포트 체크 + 재시도
 Makefile                       # test-e2e 타겟에서 스크립트 호출
 playwright.config.ts           # webServer 제거
 .github/workflows/e2e-tests.yml  # make dev & + make test-e2e
 ```
 
 ## 검증 결과
-- ✅ 서버 없이 실행 시 5초 후 명확한 에러 메시지
+- ✅ 서버 없이 실행 시 10초 후 명확한 에러 메시지
 - ✅ 서버 실행 시 2초 내 감지 후 테스트 진행
 - ✅ 15개 테스트 중 14개 통과 (1개는 테스트 자체 버그)
 
