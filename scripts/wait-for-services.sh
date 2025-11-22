@@ -7,7 +7,7 @@ set -e
 
 BACKEND_PORT=8080
 FRONTEND_PORT=5173
-MAX_RETRIES=5
+MAX_RETRIES=10
 RETRY_INTERVAL=1
 
 echo "Waiting for services to be ready..."
