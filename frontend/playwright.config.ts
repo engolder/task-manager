@@ -26,11 +26,4 @@ export default defineConfig({
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',
   },
-
-  // Run your local dev server before starting the tests
-  webServer: {
-    command: 'yarn dev',
-    port: 5173,
-    reuseExistingServer: !process.env.CI,
-  },
 });

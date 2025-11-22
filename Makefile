@@ -17,5 +17,6 @@ dev:
 
 # E2E Tests
 test-e2e:
+	@./scripts/wait-for-services.sh
 	@echo "Running E2E tests..."
 	cd frontend && yarn test:e2e

@@ -436,8 +436,14 @@ test('should create and complete a task', async ({ page }) => {
 ```bash
 # 앱 실행 후 테스트
 make dev          # 터미널 1
-make test-e2e     # 터미널 2
+make test-e2e     # 터미널 2 (자동으로 서비스 준비 확인)
 ```
+
+**주요 특징:**
+- Playwright는 테스트만 담당 (webServer 설정 없음)
+- `make test-e2e`가 포트 체크로 서비스 준비 상태 자동 확인
+- 5초 타임아웃으로 빠른 피드백
+- 상세 가이드: `frontend/e2e/CLAUDE.md` 참조
 
 ---
 

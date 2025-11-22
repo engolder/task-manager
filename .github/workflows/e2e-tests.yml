@@ -31,15 +31,11 @@ jobs:
         working-directory: ./frontend
         run: npx playwright install --with-deps chromium
 
-      - name: Start backend
-        working-directory: ./backend
-        run: |
-          go run cmd/task-service/main.go &
-          sleep 5
+      - name: Start application
+        run: make dev &
 
       - name: Run E2E tests
-        working-directory: ./frontend
-        run: yarn test:e2e
+        run: make test-e2e
         env:
           CI: true
 
