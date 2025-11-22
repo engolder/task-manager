@@ -11,8 +11,8 @@ dev-backend:
 # Full application
 dev:
 	@echo "Starting full application..."
-	@$(MAKE) dev-backend &
-	@$(MAKE) dev-frontend &
+	@$(MAKE) dev-backend 2>&1 | sed 's/^/backend: /' &
+	@$(MAKE) dev-frontend 2>&1 | sed 's/^/frontend: /' &
 	@wait
 
 # E2E Tests
