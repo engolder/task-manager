@@ -23,21 +23,20 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: yarn install --frozen-lockfile
+      - name: Build backend
+        run: make build-backend
 
-      - name: Install backend dependencies
-        working-directory: ./backend
-        run: go mod download
+      - name: Build frontend
+        working-directory: ./frontend
+        run: yarn install --frozen-lockfile && yarn build
 
       - name: Install Playwright
         working-directory: ./frontend
         run: npx playwright install --with-deps chromium
 
-      - name: Start application and run E2E tests
+      - name: Run application and E2E tests
         run: |
-          make dev &
+          make run &
           make test-e2e
         env:
           CI: true
