@@ -434,15 +434,20 @@ test('should create and complete a task', async ({ page }) => {
 
 ### E2E 테스트 실행
 ```bash
-# 앱 실행 후 테스트
+# 로컬 개발 환경 (vite dev - 포트 5173, 기본값)
 make dev          # 터미널 1
-make test-e2e     # 터미널 2 (자동으로 서비스 준비 확인)
+make test-e2e     # 터미널 2
+
+# Production 빌드 환경 (vite preview - 포트 4173)
+make build && make run           # 터미널 1
+make test-e2e STAGE=production   # 터미널 2
 ```
 
 **주요 특징:**
 - Playwright는 테스트만 담당 (webServer 설정 없음)
 - `make test-e2e`가 포트 체크로 서비스 준비 상태 자동 확인
 - 10초 타임아웃으로 빠른 피드백
+- STAGE 변수로 로컬(5173, 기본값)/프로덕션(4173) 포트 구분
 - 상세 가이드: `frontend/e2e/CLAUDE.md` 참조
 
 ---

@@ -49,8 +49,21 @@
 - Frontend(React) + Backend(Go) 전체 통합 테스트
 - Playwright 기반 브라우저 자동화 테스트
 - GitHub Actions에서 자동 실행 (main 브랜치 push/PR 시)
-- **사전 조건**: `make dev`로 서버 실행 후 테스트 (자동으로 서비스 준비 상태 확인)
+- **사전 조건**: 서버 실행 후 테스트 (자동으로 서비스 준비 상태 확인)
 - 서비스 대기 로직: `scripts/wait-for-services.sh` (10초 타임아웃)
+
+**STAGE 변수 지원:**
+```bash
+# Local 모드 (기본값, vite dev - 포트 5173)
+make test-e2e
+
+# Production 모드 (vite preview - 포트 4173)
+make test-e2e STAGE=production
+```
+
+**실행 환경별 사용 예시:**
+- 로컬 개발: `make dev` → `make test-e2e` (local 모드, 기본값)
+- CI/CD 환경: `make build` → `make run` → `make test-e2e STAGE=production` (production 모드)
 
 ## 3. 품질 관리
 

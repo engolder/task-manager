@@ -6,11 +6,18 @@
 set -e
 
 BACKEND_PORT=8080
-FRONTEND_PORT=5173
 MAX_RETRIES=10
 RETRY_INTERVAL=1
 
-echo "Waiting for services to be ready..."
+# Determine frontend port based on STAGE
+STAGE=${STAGE:-local}
+if [ "$STAGE" = "local" ]; then
+  FRONTEND_PORT=5173
+else
+  FRONTEND_PORT=4173
+fi
+
+echo "Waiting for services to be ready... (STAGE=$STAGE)"
 
 # Wait for backend
 for i in $(seq 1 $MAX_RETRIES); do
@@ -37,7 +44,7 @@ for i in $(seq 1 $MAX_RETRIES); do
   if [ "$i" -eq "$MAX_RETRIES" ]; then
     printf "\r\033[K❌ Frontend is not running on port $FRONTEND_PORT\n"
     echo "   Timeout after ${MAX_RETRIES}s"
-    echo "   Please run 'make dev-frontend' first"
+    echo "   Please run 'make dev-frontend' or 'make run-frontend' first"
     exit 1
   fi
   printf "\r⏳ Waiting for frontend... (%d/%d)" "$i" "$MAX_RETRIES"

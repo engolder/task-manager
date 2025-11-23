@@ -40,7 +40,10 @@ run:
 	@wait
 
 # E2E Tests
+# Usage: make test-e2e [STAGE=local|production]
+# Default: STAGE=local (port 5173)
+STAGE ?= local
 test-e2e:
-	@./scripts/wait-for-services.sh
+	@STAGE=$(STAGE) ./scripts/wait-for-services.sh
 	@echo "Running E2E tests..."
 	cd frontend && yarn test:e2e
