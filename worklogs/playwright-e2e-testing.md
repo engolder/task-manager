@@ -88,6 +88,38 @@ dev:
 
 **sed -u 사용 이유**: 기본 sed는 버퍼링으로 로그가 지연됨. `-u`로 즉시 출력
 
+### 6. SQLite 디렉토리 자동 생성
+**이유**:
+- CI에서 Git 체크아웃 시 `.gitignore`된 `backend/data/` 디렉토리가 생성되지 않음
+- SQLite는 부모 디렉토리가 없으면 DB 파일을 생성할 수 없음
+- 에러: `Failed to initialize database: unable to open database file: no such file or directory`
+
+**문제 재현**:
+```bash
+rm -rf backend/data/
+make dev-backend
+# 에러 발생 확인
+```
+
+**해결 방법**:
+- `os.MkdirAll()`로 DB 디렉토리를 자동 생성
+- in-memory DB는 제외
+- Go 커뮤니티 표준 패턴 (Ben Johnson의 WTF 프로젝트 등)
+
+**구현**:
+```go
+if dbPath != ":memory:" {
+    if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+        return nil, fmt.Errorf("failed to create database directory: %w", err)
+    }
+}
+```
+
+**왜 이 방법이 표준인가**:
+- GORM/SQLite 드라이버에 자동 생성 기능 없음
+- Go 설계 철학: 보안상 이유로 `sql.Open()`이 자동으로 디렉토리를 생성하지 않음
+- 각 애플리케이션이 권한 모델에 맞게 직접 관리
+
 ## 최종 구조
 ```
 scripts/wait-for-services.sh  # STAGE 기반 포트 체크 (10초 타임아웃)

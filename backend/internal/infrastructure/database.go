@@ -1,8 +1,10 @@
 package infrastructure
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"tasklist-backend/internal/domain"
 
 	"gorm.io/driver/sqlite"
@@ -18,6 +20,12 @@ func NewDatabase() (*Database, error) {
 	dbPath := os.Getenv("DB_PATH")
 	if dbPath == "" {
 		dbPath = "./data/tasks.db"
+	}
+
+	if dbPath != ":memory:" {
+		if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+			return nil, fmt.Errorf("failed to create database directory: %w", err)
+		}
 	}
 
 	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{
