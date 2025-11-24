@@ -20,8 +20,7 @@ export default defineConfig({
 
   // Global test settings
   use: {
-    // Base URL for all tests
-    baseURL: 'http://localhost:5173',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL,
 
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',

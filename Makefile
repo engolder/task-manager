@@ -46,4 +46,8 @@ STAGE ?= local
 test-e2e:
 	@STAGE=$(STAGE) ./scripts/wait-for-services.sh
 	@echo "Running E2E tests..."
-	cd frontend && yarn test:e2e
+	@if [ "$(STAGE)" = "local" ]; then \
+		PLAYWRIGHT_BASE_URL=http://localhost:5173 cd frontend && yarn test:e2e; \
+	else \
+		PLAYWRIGHT_BASE_URL=http://localhost:4173 cd frontend && yarn test:e2e; \
+	fi

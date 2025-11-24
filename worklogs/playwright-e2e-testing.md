@@ -48,6 +48,22 @@ fi
 
 **기본값 local 선택 이유**: 로컬에서 직접 칠 일이 많아서 편의성 우선
 
+**Playwright baseURL도 STAGE에 맞춤**:
+- `playwright.config.ts`에서 하드코딩된 baseURL 제거
+- Makefile의 `test-e2e`에서 STAGE에 따라 `PLAYWRIGHT_BASE_URL` 환경변수 설정
+
+```makefile
+test-e2e:
+	@STAGE=$(STAGE) ./scripts/wait-for-services.sh
+	@if [ "$(STAGE)" = "local" ]; then \
+		PLAYWRIGHT_BASE_URL=http://localhost:5173 cd frontend && yarn test:e2e; \
+	else \
+		PLAYWRIGHT_BASE_URL=http://localhost:4173 cd frontend && yarn test:e2e; \
+	fi
+```
+
+**기본값 없앤 이유**: 환경변수로 항상 명시적으로 설정하면 되므로 불필요
+
 ### 4. CI는 build + run 방식으로 변경
 **이유**:
 - `go run`은 매번 의존성 다운로드 (캐싱 안 됨)
