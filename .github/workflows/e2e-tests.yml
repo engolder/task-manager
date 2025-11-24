@@ -37,7 +37,7 @@ jobs:
       - name: Run application and E2E tests
         run: |
           make run &
-          make test-e2e
+          make test-e2e STAGE=production
         env:
           CI: true
 
