@@ -91,7 +91,7 @@ test-e2e:
 
 - name: Run application and E2E tests
   run: |
-    make run &
+    make preview &
     make test-e2e STAGE=production
 ```
 
@@ -158,11 +158,11 @@ make dev          # 터미널 1
 make test-e2e     # 터미널 2 (자동으로 5173 체크)
 
 # 프로덕션 빌드 테스트
-make build && make run           # 터미널 1
-make test-e2e STAGE=production   # 터미널 2 (4173 체크)
+make build && make preview           # 터미널 1
+make test-e2e STAGE=production       # 터미널 2 (4173 체크)
 
 # CI
-# make build → make run → make test-e2e STAGE=production
+# make build → make preview → make test-e2e STAGE=production
 ```
 
 ## 테스트 작성 팁

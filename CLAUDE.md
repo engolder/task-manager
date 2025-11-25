@@ -205,7 +205,7 @@ make test-e2e STAGE=production
 
 **실행 환경별 사용 예시:**
 - 로컬 개발: `make dev` → `make test-e2e` (local 모드, 기본값)
-- CI/CD 환경: `make build` → `make run` → `make test-e2e STAGE=production` (production 모드)
+- CI/CD 환경: `make build` → `make preview` → `make test-e2e STAGE=production` (production 모드)
 
 ## 4. 품질 관리
 
