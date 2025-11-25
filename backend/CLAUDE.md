@@ -192,9 +192,14 @@ curl -X PUT http://localhost:8080/api/v1/tasks/{id} \
 ## 🛡️ 보안 및 미들웨어
 
 ### CORS 설정
-- 허용 Origin: `localhost:5173`, `localhost:5174`, `localhost:3000`
+- 허용 Origin: `localhost:5173`, `localhost:5174`, `localhost:4173`, `localhost:4174`, `localhost:3000`
+  - `5173`, `5174`: Vite 개발 서버 포트
+  - `4173`, `4174`: Vite preview 서버 포트 (production 빌드 테스트용)
+  - `3000`: 일반적인 개발 서버 포트
 - 허용 메서드: GET, POST, PUT, DELETE, OPTIONS
 - 허용 헤더: Origin, Content-Type, Accept, Authorization
+
+**중요**: Preview 모드나 CI 환경에서 E2E 테스트 시 4173/4174 포트가 필요합니다.
 
 ### 에러 처리
 - 일관된 HTTP 상태 코드 사용

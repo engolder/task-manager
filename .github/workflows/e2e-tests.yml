@@ -1,0 +1,48 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build backend
+        run: make build-backend
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: yarn install --frozen-lockfile && yarn build
+
+      - name: Install Playwright
+        working-directory: ./frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Run application and E2E tests
+        run: |
+          make run &
+          make test-e2e STAGE=production
+        env:
+          CI: true
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/

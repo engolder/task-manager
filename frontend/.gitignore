@@ -29,3 +29,8 @@ dist-ssr
 # Capacitor
 ios/App/public
 android/app/src/main/assets/public
+
+# Playwright E2E Testing
+test-results/
+playwright-report/
+playwright/.cache/

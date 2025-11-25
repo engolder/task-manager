@@ -237,6 +237,10 @@ yarn check
 
 # 빌드
 yarn build
+
+# E2E 테스트
+yarn test:e2e      # Playwright E2E 테스트 실행
+yarn test:e2e:ui   # UI 모드로 디버깅
 ```
 
 ### 백엔드 연동 개발
@@ -386,8 +390,11 @@ export const useUIStore = create<UIStore>((set) => ({
 - **Vitest**: 빠른 테스트 러너
 - **React Testing Library**: 컴포넌트 테스팅
 - **MSW**: API 모킹
+- **Playwright**: E2E 테스팅 (전체 앱 통합 테스트)
 
 ### 테스트 작성 예시
+
+**단위 테스트 (Vitest)**
 ```typescript
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TaskItem } from './TaskItem';
@@ -396,16 +403,52 @@ describe('TaskItem', () => {
   it('should toggle task when checkbox is clicked', () => {
     const mockToggle = jest.fn();
     const task = { id: '1', text: 'Test task', completed: false };
-    
+
     render(<TaskItem task={task} onToggle={mockToggle} />);
-    
+
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-    
+
     expect(mockToggle).toHaveBeenCalledWith('1');
   });
 });
 ```
+
+**E2E 테스트 (Playwright)**
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('should create and complete a task', async ({ page }) => {
+  await page.goto('/');
+
+  // 작업 추가
+  await page.getByPlaceholder('작업을 입력하세요').fill('새 작업');
+  await page.getByRole('button', { name: '추가' }).click();
+
+  // 작업 완료 토글
+  const checkbox = page.getByText('새 작업').locator('..').locator('button[role="checkbox"]');
+  await checkbox.click();
+  await expect(checkbox).toHaveAttribute('data-state', 'checked');
+});
+```
+
+### E2E 테스트 실행
+```bash
+# 로컬 개발 환경 (vite dev - 포트 5173, 기본값)
+make dev          # 터미널 1
+make test-e2e     # 터미널 2
+
+# Production 빌드 환경 (vite preview - 포트 4173)
+make build && make run           # 터미널 1
+make test-e2e STAGE=production   # 터미널 2
+```
+
+**주요 특징:**
+- Playwright는 테스트만 담당 (webServer 설정 없음)
+- `make test-e2e`가 포트 체크로 서비스 준비 상태 자동 확인
+- 10초 타임아웃으로 빠른 피드백
+- STAGE 변수로 로컬(5173, 기본값)/프로덕션(4173) 포트 구분
+- 상세 가이드: `frontend/e2e/CLAUDE.md` 참조
 
 ---
 
