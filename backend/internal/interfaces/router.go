@@ -12,7 +12,7 @@ func NewRouter(taskService *application.TaskService) *gin.Engine {
 	r := gin.Default()
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:3000"}
+	config.AllowOrigins = []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:4173", "http://localhost:4174", "http://localhost:3000"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
 	r.Use(cors.New(config))

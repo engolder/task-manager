@@ -56,13 +56,19 @@ fi
 test-e2e:
 	@STAGE=$(STAGE) ./scripts/wait-for-services.sh
 	@if [ "$(STAGE)" = "local" ]; then \
-		PLAYWRIGHT_BASE_URL=http://localhost:5173 cd frontend && yarn test:e2e; \
+		cd frontend && PLAYWRIGHT_BASE_URL=http://localhost:5173 yarn test:e2e; \
 	else \
-		PLAYWRIGHT_BASE_URL=http://localhost:4173 cd frontend && yarn test:e2e; \
+		cd frontend && PLAYWRIGHT_BASE_URL=http://localhost:4173 yarn test:e2e; \
 	fi
 ```
 
+**참고**: 환경변수는 `cd frontend &&` 뒤에 위치해야 yarn에 전달됨
+
 **기본값 없앤 이유**: 환경변수로 항상 명시적으로 설정하면 되므로 불필요
+
+**백엔드 CORS 포트**:
+- Preview 모드 지원을 위해 `4173`, `4174` 포트도 허용 (기존: `5173`, `5174`만 허용)
+- Vite preview는 포트가 사용 중이면 자동으로 다음 포트 사용
 
 ### 4. CI는 build + run 방식으로 변경
 **이유**:
