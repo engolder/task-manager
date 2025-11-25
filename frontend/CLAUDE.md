@@ -439,8 +439,8 @@ make dev          # 터미널 1
 make test-e2e     # 터미널 2
 
 # Production 빌드 환경 (vite preview - 포트 4173)
-make build && make run           # 터미널 1
-make test-e2e STAGE=production   # 터미널 2
+make build && make preview           # 터미널 1
+make test-e2e STAGE=production       # 터미널 2
 ```
 
 **주요 특징:**

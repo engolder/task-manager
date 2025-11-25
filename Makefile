@@ -1,4 +1,4 @@
-.PHONY: dev dev-frontend dev-backend build build-frontend build-backend run run-frontend run-backend test-e2e
+.PHONY: dev dev-frontend dev-backend build build-frontend build-backend preview preview-frontend preview-backend test-e2e
 
 # Frontend
 dev-frontend:
@@ -7,7 +7,7 @@ dev-frontend:
 build-frontend:
 	cd frontend && yarn build
 
-run-frontend:
+preview-frontend:
 	cd frontend && yarn preview
 
 # Backend(all services)
@@ -17,7 +17,7 @@ dev-backend:
 build-backend:
 	$(MAKE) -C backend build
 
-run-backend:
+preview-backend:
 	$(MAKE) -C backend run
 
 # Full application (development)
@@ -33,10 +33,10 @@ build:
 	@$(MAKE) build-backend
 	@$(MAKE) build-frontend
 
-run:
+preview:
 	@echo "Running full application..."
-	@$(MAKE) run-backend 2>&1 | sed -u 's/^/backend: /' &
-	@$(MAKE) run-frontend 2>&1 | sed -u 's/^/frontend: /' &
+	@$(MAKE) preview-backend 2>&1 | sed -u 's/^/backend: /' &
+	@$(MAKE) preview-frontend 2>&1 | sed -u 's/^/frontend: /' &
 	@wait
 
 # E2E Tests
