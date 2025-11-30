@@ -171,6 +171,31 @@ try {
 
 ---
 
+## 트러블슈팅
+
+### iOS 런타임 버전 불일치
+
+**증상**: `yarn ios:dev` 실행 시 빌드 실패
+```
+error: iOS 18.2 Platform Not Installed.
+```
+
+**진단**:
+```bash
+xcodebuild ... 2>&1 | grep -A 20 "error:"  # 에러 메시지 추출
+xcrun simctl list runtimes | grep iOS      # 설치된 런타임 확인
+```
+
+**원인**: 스토리보드가 최신 iOS SDK로 생성되었으나 해당 런타임 미설치
+
+**해결**:
+```bash
+xcodebuild -downloadPlatform iOS  # 최신 런타임 자동 설치
+xcrun simctl runtime list         # 설치 확인
+```
+
+---
+
 ## 참고 문서
 - [Capacitor Live Reload 가이드](https://capacitorjs.com/docs/guides/live-reload)
 - [Capacitor Configuration](https://capacitorjs.com/docs/config)
