@@ -23,9 +23,9 @@ preview-backend:
 # Full application (development)
 dev:
 	@echo "Starting full application..."
-	@$(MAKE) dev-backend 2>&1 | sed -u 's/^/backend: /' &
-	@$(MAKE) dev-frontend 2>&1 | sed -u 's/^/frontend: /' &
-	@wait
+	@$(MAKE) dev-backend 2>&1 | sed -u 's/^/backend: /' & \
+	$(MAKE) dev-frontend 2>&1 | sed -u 's/^/frontend: /' & \
+	wait
 
 # Full application (production build)
 build:
@@ -35,9 +35,9 @@ build:
 
 preview:
 	@echo "Running full application..."
-	@$(MAKE) preview-backend 2>&1 | sed -u 's/^/backend: /' &
-	@$(MAKE) preview-frontend 2>&1 | sed -u 's/^/frontend: /' &
-	@wait
+	@$(MAKE) preview-backend 2>&1 | sed -u 's/^/backend: /' & \
+	$(MAKE) preview-frontend 2>&1 | sed -u 's/^/frontend: /' & \
+	wait
 
 # E2E Tests
 # Usage: make test-e2e [STAGE=local|production]
