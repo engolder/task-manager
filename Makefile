@@ -40,13 +40,13 @@ preview:
 	wait
 
 # E2E Tests
-# Usage: make test-e2e [STAGE=local|production]
-# Default: STAGE=local (port 5173)
-STAGE ?= local
+# Usage: make test-e2e [PHASE=debug|release]
+# Default: PHASE=debug (port 5173)
+PHASE ?= debug
 test-e2e:
-	@STAGE=$(STAGE) ./scripts/wait-for-services.sh
+	@PHASE=$(PHASE) ./scripts/wait-for-services.sh
 	@echo "Running E2E tests..."
-	@if [ "$(STAGE)" = "local" ]; then \
+	@if [ "$(PHASE)" = "debug" ]; then \
 		cd frontend && PLAYWRIGHT_BASE_URL=http://localhost:5173 yarn test:e2e; \
 	else \
 		cd frontend && PLAYWRIGHT_BASE_URL=http://localhost:4173 yarn test:e2e; \

@@ -192,14 +192,25 @@ curl -X PUT http://localhost:8080/api/v1/tasks/{id} \
 ## 🛡️ 보안 및 미들웨어
 
 ### CORS 설정
-- 허용 Origin: `localhost:5173`, `localhost:5174`, `localhost:4173`, `localhost:4174`, `localhost:3000`
-  - `5173`, `5174`: Vite 개발 서버 포트
-  - `4173`, `4174`: Vite preview 서버 포트 (production 빌드 테스트용)
-  - `3000`: 일반적인 개발 서버 포트
-- 허용 메서드: GET, POST, PUT, DELETE, OPTIONS
-- 허용 헤더: Origin, Content-Type, Accept, Authorization
+**환경별 정책:**
+- **Debug 모드** (`PHASE=debug`): 모든 Origin 허용 (`AllowAllOrigins = true`)
+  - iOS Live Reload 지원 (동적 IP 주소)
+  - 로컬 네트워크 개발 편의성
+- **Release 모드** (`PHASE=release` 또는 미설정): 제한된 Origin만 허용
+  - `localhost:5173`, `localhost:5174`: Vite 개발 서버 포트
+  - `localhost:4173`, `localhost:4174`: Vite preview 서버 포트
 
-**중요**: Preview 모드나 CI 환경에서 E2E 테스트 시 4173/4174 포트가 필요합니다.
+**허용 메서드**: GET, POST, PUT, DELETE, OPTIONS
+**허용 헤더**: Origin, Content-Type, Accept, Authorization
+
+**PHASE 환경 변수 제어:**
+```bash
+# 개발 환경 (모든 Origin 허용)
+PHASE=debug go run cmd/task-service/main.go
+
+# 프로덕션 환경 (제한된 Origin만 허용)
+PHASE=release ./bin/task-service
+```
 
 ### 에러 처리
 - 일관된 HTTP 상태 코드 사용

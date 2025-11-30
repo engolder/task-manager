@@ -53,10 +53,17 @@ backend/internal/interfaces/router.go:
   - PHASE 환경 변수 읽기
   - Gin 모드 설정
   - CORS 정책 분기
+
+Makefile (루트):
+  test-e2e: PHASE 기반 포트 선택 (debug=5173, release=4173)
+
+scripts/wait-for-services.sh:
+  - PHASE 기반 프론트엔드 포트 감지
 ```
 
 ## 사용법
 
+### 백엔드 실행
 ```bash
 # 개발 모드
 make dev
@@ -67,5 +74,20 @@ make build && make preview
 PHASE=release ./bin/task-service
 ```
 
+### E2E 테스트 실행
+```bash
+# Debug 모드 (포트 5173)
+make test-e2e
+
+# Release 모드 (포트 4173)
+make test-e2e PHASE=release
+```
+
+**PHASE 통일로 얻은 이점**:
+- 백엔드와 E2E 테스트가 동일한 환경 변수 사용
+- 일관된 네이밍으로 혼란 방지 (기존 `STAGE=local/production` 제거)
+- `debug`/`release`로 의도가 명확
+
 ## 관련 문서
 - `worklogs/backend-cors-configuration.md` - CORS 설정 상세
+- `worklogs/playwright-e2e-testing.md` - E2E 테스트 구축
