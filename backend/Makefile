@@ -2,13 +2,13 @@
 
 # task service
 dev-task:
-	go run cmd/task-service/main.go
+	PHASE=debug go run cmd/task-service/main.go
 
 build-task:
 	go build -o bin/task-service cmd/task-service/main.go
 
 run-task:
-	./bin/task-service
+	PHASE=release ./bin/task-service
 
 # Future services(not implemented)
 # dev-user:

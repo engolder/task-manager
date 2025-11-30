@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"os"
 	"tasklist-backend/internal/application"
 
 	"github.com/gin-contrib/cors"
@@ -8,11 +9,31 @@ import (
 )
 
 func NewRouter(taskService *application.TaskService) *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
+	phase := os.Getenv("PHASE")
+	if phase == "debug" {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.Default()
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:4173", "http://localhost:4174", "http://localhost:3000"}
+
+	// 개발 환경에서는 모든 Origin 허용 (iOS Live Reload 등)
+	if gin.Mode() == gin.DebugMode || gin.Mode() == gin.TestMode {
+		config.AllowAllOrigins = true
+	} else {
+		// 프로덕션에서는 특정 도메인만 허용
+		config.AllowOrigins = []string{
+			"http://localhost:5173", // Vite dev
+			"http://localhost:5174", // Vite dev (alternative)
+			"http://localhost:4173", // Vite preview
+			"http://localhost:4174", // Vite preview (alternative)
+			// TODO: 프로덕션 도메인 추가 필요
+		}
+	}
+
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
 	r.Use(cors.New(config))
