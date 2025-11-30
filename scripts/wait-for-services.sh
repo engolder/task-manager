@@ -9,15 +9,15 @@ BACKEND_PORT=8080
 MAX_RETRIES=10
 RETRY_INTERVAL=1
 
-# Determine frontend port based on STAGE
-STAGE=${STAGE:-local}
-if [ "$STAGE" = "local" ]; then
+# Determine frontend port based on PHASE
+PHASE=${PHASE:-debug}
+if [ "$PHASE" = "debug" ]; then
   FRONTEND_PORT=5173
 else
   FRONTEND_PORT=4173
 fi
 
-echo "Waiting for services to be ready... (STAGE=$STAGE)"
+echo "Waiting for services to be ready... (PHASE=$PHASE)"
 
 # Wait for backend
 for i in $(seq 1 $MAX_RETRIES); do
