@@ -440,14 +440,14 @@ make test-e2e     # 터미널 2
 
 # Production 빌드 환경 (vite preview - 포트 4173)
 make build && make preview           # 터미널 1
-make test-e2e STAGE=production       # 터미널 2
+make test-e2e PHASE=release          # 터미널 2
 ```
 
 **주요 특징:**
 - Playwright는 테스트만 담당 (webServer 설정 없음)
 - `make test-e2e`가 포트 체크로 서비스 준비 상태 자동 확인
 - 10초 타임아웃으로 빠른 피드백
-- STAGE 변수로 로컬(5173, 기본값)/프로덕션(4173) 포트 구분
+- PHASE 변수로 로컬(5173, 기본값)/프로덕션(4173) 포트 구분
 - 상세 가이드: `frontend/e2e/CLAUDE.md` 참조
 
 ---

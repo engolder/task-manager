@@ -85,7 +85,7 @@ make test-e2e PHASE=release
 
 **PHASE 통일로 얻은 이점**:
 - 백엔드와 E2E 테스트가 동일한 환경 변수 사용
-- 일관된 네이밍으로 혼란 방지 (기존 `STAGE=local/production` 제거)
+- 일관된 네이밍으로 혼란 방지
 - `debug`/`release`로 의도가 명확
 
 ## 관련 문서
