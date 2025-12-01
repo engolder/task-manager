@@ -8,6 +8,7 @@
 - **ORM**: GORM (타입 안전한 데이터베이스 접근)
 - **데이터베이스**: SQLite (개발용), PostgreSQL (프로덕션 대비)
 - **아키텍처**: Clean Architecture + Domain Driven Design (DDD)
+- **의존성 주입**: Uber Fx (생명주기 관리, 모듈 기반 DI)
 - **HTTP 클라이언트**: 내장 net/http
 - **UUID**: Google UUID 라이브러리
 
@@ -23,59 +24,194 @@
 ```
 backend/
 ├── cmd/
-│   └── task-service/        # 서비스 진입점
-│       └── main.go          # 메인 실행 파일
-├── internal/                # 비공개 패키지 (외부 import 불가)
-│   ├── domain/              # 도메인 레이어 (비즈니스 모델)
-│   │   └── task.go          # Task 엔티티, Repository 인터페이스
-│   ├── application/         # 애플리케이션 레이어 (비즈니스 로직)
-│   │   └── task_service.go  # Task 비즈니스 서비스
-│   ├── infrastructure/      # 인프라 레이어 (외부 의존성)
-│   │   ├── database.go      # 데이터베이스 연결 설정
-│   │   └── task_repository.go # Repository 구현체
-│   └── interfaces/          # 인터페이스 레이어 (HTTP API)
-│       ├── task_handler.go  # HTTP 핸들러
-│       └── router.go        # API 라우터 설정
-├── pkg/                     # 공개 패키지 (외부 import 가능)
-│   ├── config/             # 설정 관리
-│   │   └── config.go       # 환경 설정 로더
-│   ├── logger/             # 로깅 유틸리티 (향후)
-│   └── middleware/         # 공통 미들웨어 (향후)
-├── configs/                # 설정 파일 디렉토리
-├── go.mod                  # Go 모듈 정의
-├── go.sum                  # 의존성 체크섬
-└── tasks.db               # SQLite 데이터베이스 파일
+│   └── task-service/
+│       └── main.go              # Fx 모듈 조립
+├── pkg/                         # 공용 인터페이스
+│   ├── http/
+│   │   └── server.go           # HTTPServer 인터페이스
+│   └── config/
+│       ├── config.go
+│       └── module.go           # Config Fx 모듈
+├── internal/
+│   ├── domain/                  # 순수 비즈니스 로직
+│   │   └── task/
+│   │       ├── entity.go        # Task 엔티티
+│   │       └── repository.go    # Repository 인터페이스
+│   ├── usecase/                 # 비즈니스 시나리오
+│   │   └── task/
+│   │       ├── usecase.go
+│   │       └── module.go
+│   ├── infrastructure/          # 외부 기술
+│   │   ├── database/
+│   │   │   ├── database.go     # DB 연결
+│   │   │   └── module.go
+│   │   ├── persistence/         # Repository 구현
+│   │   │   └── task/
+│   │   │       ├── repository.go
+│   │   │       └── module.go
+│   │   └── http/
+│   │       ├── server.go       # Gin 서버
+│   │       └── module.go
+│   └── controller/              # 외부 인터페이스
+│       └── http/
+│           └── task/
+│               ├── handler.go
+│               ├── router.go
+│               └── module.go
+├── go.mod
+├── go.sum
+└── data/tasks.db
 ```
 
 ---
 
 ## 🏗️ Clean Architecture 레이어별 책임
 
-### 1. Domain Layer (`internal/domain/`)
+### 1. Domain Layer (`internal/domain/task/`)
 - **책임**: 순수한 비즈니스 모델과 규칙 정의
 - **특징**: 외부 의존성 없음, 프레임워크 독립적
 - **파일**:
-  - `task.go`: Task 엔티티, 비즈니스 규칙, Repository 인터페이스
+  - `entity.go`: Task 엔티티, 비즈니스 규칙
+  - `repository.go`: Repository 인터페이스 (계약)
 
-### 2. Application Layer (`internal/application/`)
+### 2. UseCase Layer (`internal/usecase/task/`)
 - **책임**: 비즈니스 로직 조율, 사용 사례 구현
-- **특징**: Domain을 의존하지만 Infrastructure는 인터페이스로 추상화
+- **특징**: Domain 인터페이스만 의존
 - **파일**:
-  - `task_service.go`: Task 관련 비즈니스 로직, 입력 검증
+  - `usecase.go`: Task 비즈니스 로직, 입력 검증
+  - `module.go`: Fx 모듈 정의
+
+**의존성**: Domain Repository 인터페이스 → Infrastructure에서 구현체 주입
 
 ### 3. Infrastructure Layer (`internal/infrastructure/`)
-- **책임**: 외부 시스템과의 연동 (DB, 외부 API 등)
+- **책임**: 외부 시스템과의 연동 (DB, HTTP 서버, 외부 API)
 - **특징**: Domain 인터페이스 구현, 프레임워크 의존적
-- **파일**:
-  - `database.go`: GORM 데이터베이스 연결 관리
-  - `task_repository.go`: TaskRepository 인터페이스 구현
+- **서브 디렉토리**:
+  - `database/`: GORM 연결, 생명주기 관리
+  - `persistence/task/`: TaskRepository 구현, fx.As로 인터페이스 제공
+  - `http/`: Gin 서버, HTTPServer 인터페이스 구현
 
-### 4. Interface Layer (`internal/interfaces/`)
-- **책임**: 외부와의 통신 인터페이스 (HTTP, CLI 등)
-- **특징**: 프레임워크 의존적, Application Layer 사용
+### 4. Controller Layer (`internal/controller/http/task/`)
+- **책임**: HTTP 요청/응답 처리
+- **특징**: pkg/http.HTTPServer 인터페이스 사용 (Infrastructure 직접 의존 X)
 - **파일**:
-  - `task_handler.go`: HTTP 요청/응답 처리
-  - `router.go`: API 엔드포인트 라우팅, 미들웨어 설정
+  - `handler.go`: HTTP 핸들러
+  - `router.go`: RegisterRoutes 함수 (HTTPServer 인터페이스 활용)
+  - `module.go`: Fx 모듈, fx.Invoke로 RegisterRoutes 자동 호출
+
+---
+
+## 🔄 Uber Fx 의존성 주입 패턴
+
+### 모듈 조립 (`cmd/task-service/main.go`)
+```go
+func main() {
+    fx.New(
+        config.Module,           // 환경 설정
+        database.Module,         // DB 연결
+        taskPersistence.Module,  // Repository 구현
+        http.Module,             // HTTP 서버
+        taskUseCase.Module,      // 비즈니스 로직
+        taskController.Module,   // HTTP 컨트롤러
+    ).Run()
+}
+```
+
+### 모듈 패턴
+
+각 기능은 `module.go`에서 Fx 모듈을 정의:
+
+**기본 Provide 패턴** (`usecase/task/module.go`):
+```go
+var Module = fx.Module("usecase.task",
+    fx.Provide(New),
+)
+```
+
+**인터페이스 제공 패턴** (`persistence/task/module.go`):
+```go
+var Module = fx.Module("persistence.task",
+    fx.Provide(
+        fx.Annotate(
+            New,
+            fx.As(new(domainTask.Repository)),
+        ),
+    ),
+)
+```
+- `fx.As`: 구체 타입을 인터페이스로 변환하여 제공
+- UseCase는 구현체가 아닌 인터페이스를 주입받음
+
+**Invoke 패턴** (`controller/http/task/module.go`):
+```go
+var Module = fx.Module("controller.http.task",
+    fx.Provide(NewHandler),
+    fx.Invoke(RegisterRoutes),
+)
+```
+- `fx.Invoke`: 애플리케이션 시작 시 자동 실행
+- RegisterRoutes가 HTTPServer를 주입받아 라우트 등록
+
+### 생명주기 관리
+
+**OnStart/OnStop 훅** (`infrastructure/http/server.go`):
+```go
+func New(lc fx.Lifecycle, cfg *pkgConfig.Config) *Server {
+    // ...
+    lc.Append(fx.Hook{
+        OnStart: func(ctx context.Context) error {
+            // 서버 시작
+            go engine.Run(addr)
+            return nil
+        },
+        OnStop: func(ctx context.Context) error {
+            // Graceful shutdown
+            return nil
+        },
+    })
+    return server
+}
+```
+
+**DB 연결 종료** (`infrastructure/database/database.go`):
+```go
+lc.Append(fx.Hook{
+    OnStop: func(ctx context.Context) error {
+        sqlDB, _ := db.DB()
+        return sqlDB.Close()
+    },
+})
+```
+
+### Controller-Infrastructure 분리
+
+**pkg/http 인터페이스** (`pkg/http/server.go`):
+```go
+type HTTPServer interface {
+    Group(path string) *gin.RouterGroup
+}
+```
+
+**Infrastructure 구현** (`infrastructure/http/server.go`):
+```go
+func (s *Server) Group(path string) *gin.RouterGroup {
+    return s.engine.Group(path)
+}
+```
+
+**Controller 사용** (`controller/http/task/router.go`):
+```go
+func RegisterRoutes(server pkgHttp.HTTPServer, handler *Handler) {
+    v1 := server.Group("/api/v1")
+    tasks := v1.Group("/tasks")
+    // ...
+}
+```
+
+**장점**:
+- Controller가 Gin에 직접 의존하지 않음
+- HTTP 프레임워크 교체 시 Controller 수정 불필요
+- 테스트 시 HTTPServer 인터페이스 모킹 가능
 
 ---
 

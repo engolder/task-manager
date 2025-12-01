@@ -9,6 +9,7 @@ Go backend service with Clean Architecture and Domain-Driven Design.
 - **ORM**: GORM (type-safe database access)
 - **Database**: SQLite (dev), PostgreSQL (prod-ready)
 - **Architecture**: Clean Architecture + Domain-Driven Design (DDD)
+- **Dependency Injection**: Uber Fx (automated DI, lifecycle management)
 - **HTTP Client**: Built-in net/http
 - **UUID**: Google UUID library
 
@@ -17,54 +18,80 @@ Go backend service with Clean Architecture and Domain-Driven Design.
 ```
 backend/
 ├── cmd/
-│   └── task-service/        # Service entrypoint
-│       └── main.go          # Main executable
-├── internal/                # Private packages (no external import)
-│   ├── domain/              # Domain layer (business models)
-│   │   └── task.go          # Task entity, Repository interface
-│   ├── application/         # Application layer (business logic)
-│   │   └── task_service.go  # Task business service
-│   ├── infrastructure/      # Infrastructure layer (external dependencies)
-│   │   ├── database.go      # Database connection setup
-│   │   └── task_repository.go # Repository implementation
-│   └── interfaces/          # Interface layer (HTTP API)
-│       ├── task_handler.go  # HTTP handlers
-│       └── router.go        # API router configuration
-├── pkg/                     # Public packages (external import allowed)
-│   └── config/             # Configuration management
-│       └── config.go       # Environment config loader
-├── go.mod                  # Go module definition
-├── go.sum                  # Dependency checksums
-└── tasks.db               # SQLite database file
+│   └── task-service/
+│       └── main.go              # Fx module composition
+├── pkg/                         # Public interfaces
+│   ├── http/
+│   │   └── server.go           # HTTPServer interface
+│   └── config/
+│       ├── config.go
+│       └── module.go
+├── internal/
+│   ├── domain/                  # Business models
+│   │   └── task/
+│   │       ├── entity.go        # Task entity
+│   │       └── repository.go    # Repository interface
+│   ├── usecase/                 # Business logic
+│   │   └── task/
+│   │       ├── usecase.go
+│   │       └── module.go
+│   ├── infrastructure/          # External dependencies
+│   │   ├── database/
+│   │   │   ├── database.go     # DB connection
+│   │   │   └── module.go
+│   │   ├── persistence/         # Repository implementations
+│   │   │   └── task/
+│   │   │       ├── repository.go
+│   │   │       └── module.go
+│   │   └── http/
+│   │       ├── server.go       # Gin server
+│   │       └── module.go
+│   └── controller/              # External interfaces
+│       └── http/
+│           └── task/
+│               ├── handler.go
+│               ├── router.go
+│               └── module.go
+├── go.mod
+├── go.sum
+└── data/tasks.db
 ```
 
 ## 🏗️ Clean Architecture Layers
 
-### 1. Domain Layer (`internal/domain/`)
+### 1. Domain Layer (`internal/domain/task/`)
 - **Responsibility**: Pure business models and rules
 - **Characteristics**: No external dependencies, framework-independent
 - **Files**:
-  - `task.go`: Task entity, business rules, Repository interface
+  - `entity.go`: Task entity, business rules
+  - `repository.go`: Repository interface (contract)
 
-### 2. Application Layer (`internal/application/`)
+### 2. UseCase Layer (`internal/usecase/task/`)
 - **Responsibility**: Business logic orchestration, use case implementation
-- **Characteristics**: Depends on Domain, abstracts Infrastructure via interfaces
+- **Characteristics**: Depends on Domain interfaces only
 - **Files**:
-  - `task_service.go`: Task business logic, input validation
+  - `usecase.go`: Task business logic, input validation
+  - `module.go`: Fx module definition
 
 ### 3. Infrastructure Layer (`internal/infrastructure/`)
-- **Responsibility**: External system integration (DB, external APIs)
+- **Responsibility**: External system integration (DB, HTTP server, external APIs)
 - **Characteristics**: Implements Domain interfaces, framework-dependent
-- **Files**:
-  - `database.go`: GORM database connection management
-  - `task_repository.go`: TaskRepository interface implementation
+- **Subdirectories**:
+  - `database/`: GORM database connection with lifecycle management
+  - `persistence/task/`: TaskRepository implementation
+  - `http/`: Gin server with CORS, health checks
 
-### 4. Interface Layer (`internal/interfaces/`)
-- **Responsibility**: External communication (HTTP, CLI, etc.)
-- **Characteristics**: Framework-dependent, uses Application layer
+### 4. Controller Layer (`internal/controller/http/task/`)
+- **Responsibility**: HTTP request/response handling
+- **Characteristics**: Uses pkg/http.HTTPServer interface (not Infrastructure directly)
 - **Files**:
-  - `task_handler.go`: HTTP request/response handling
-  - `router.go`: API endpoint routing, middleware configuration
+  - `handler.go`: HTTP handlers
+  - `router.go`: Route registration
+  - `module.go`: Fx module with auto-invoked RegisterRoutes
+
+## 🔄 Dependency Injection with Fx
+
+Module-based dependency injection using Uber Fx. See [CLAUDE.md](CLAUDE.md) for implementation patterns.
 
 ## 🚀 Development
 

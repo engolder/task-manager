@@ -6,7 +6,8 @@ Full-stack task management application with React frontend, Go backend, and iOS 
 
 - **Frontend**: React 19 + TypeScript + Vite
   - Mobile: Capacitor 7.4.2 (iOS 14.0+)
-- **Backend**: Go 1.23+ + Gin + GORM
+- **Backend**: Go 1.23+ + Gin + GORM + Uber Fx
+  - Architecture: Clean Architecture + DDD
   - Database: SQLite (dev), PostgreSQL (prod-ready)
 - **Testing**: Playwright (E2E), Vitest (unit)
 - **CI/CD**: GitHub Actions
