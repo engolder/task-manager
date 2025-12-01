@@ -25,7 +25,7 @@ TodoList 앱에 E2E 테스팅 환경 구축 및 실행 흐름 개선
 
 **타임아웃 10초 선택 이유**: 로컬 환경에서 충분하면서도 너무 길지 않아 빠른 피드백 가능
 
-### 3. STAGE 변수로 로컬/프로덕션 포트 분리
+### 3. PHASE 변수로 로컬/프로덕션 포트 분리
 **이유**:
 - 로컬 개발: vite dev (포트 5173)
 - 프로덕션 빌드: vite preview (포트 4173)
@@ -35,27 +35,27 @@ TodoList 앱에 E2E 테스팅 환경 구축 및 실행 흐름 개선
 **구현**:
 ```bash
 # Makefile
-STAGE ?= local  # 기본값은 local (포트 5173)
+PHASE ?= debug  # 기본값은 debug (포트 5173)
 
 # wait-for-services.sh
-STAGE=${STAGE:-local}
-if [ "$STAGE" = "local" ]; then
+PHASE=${PHASE:-debug}
+if [ "$PHASE" = "debug" ]; then
   FRONTEND_PORT=5173
 else
   FRONTEND_PORT=4173
 fi
 ```
 
-**기본값 local 선택 이유**: 로컬에서 직접 칠 일이 많아서 편의성 우선
+**기본값 debug 선택 이유**: 로컬에서 직접 칠 일이 많아서 편의성 우선
 
-**Playwright baseURL도 STAGE에 맞춤**:
+**Playwright baseURL도 PHASE에 맞춤**:
 - `playwright.config.ts`에서 하드코딩된 baseURL 제거
-- Makefile의 `test-e2e`에서 STAGE에 따라 `PLAYWRIGHT_BASE_URL` 환경변수 설정
+- Makefile의 `test-e2e`에서 PHASE에 따라 `PLAYWRIGHT_BASE_URL` 환경변수 설정
 
 ```makefile
 test-e2e:
-	@STAGE=$(STAGE) ./scripts/wait-for-services.sh
-	@if [ "$(STAGE)" = "local" ]; then \
+	@PHASE=$(PHASE) ./scripts/wait-for-services.sh
+	@if [ "$(PHASE)" = "debug" ]; then \
 		cd frontend && PLAYWRIGHT_BASE_URL=http://localhost:5173 yarn test:e2e; \
 	else \
 		cd frontend && PLAYWRIGHT_BASE_URL=http://localhost:4173 yarn test:e2e; \
@@ -92,7 +92,7 @@ test-e2e:
 - name: Run application and E2E tests
   run: |
     make preview &
-    make test-e2e STAGE=production
+    make test-e2e PHASE=release
 ```
 
 ### 5. 로그 라벨링으로 출력 구분
@@ -144,11 +144,11 @@ if dbPath != ":memory:" {
 
 ## 최종 구조
 ```
-scripts/wait-for-services.sh  # STAGE 기반 포트 체크 (10초 타임아웃)
-Makefile                       # STAGE 변수 + test-e2e 타겟
+scripts/wait-for-services.sh  # PHASE 기반 포트 체크 (10초 타임아웃)
+Makefile                       # PHASE 변수 + test-e2e 타겟
 backend/Makefile              # build/run 타겟 추가
 playwright.config.ts           # webServer 제거
-.github/workflows/e2e-tests.yml  # build → run → test (STAGE=production)
+.github/workflows/e2e-tests.yml  # build → run → test (PHASE=release)
 ```
 
 ## 사용법
@@ -159,10 +159,10 @@ make test-e2e     # 터미널 2 (자동으로 5173 체크)
 
 # 프로덕션 빌드 테스트
 make build && make preview           # 터미널 1
-make test-e2e STAGE=production       # 터미널 2 (4173 체크)
+make test-e2e PHASE=release          # 터미널 2 (4173 체크)
 
 # CI
-# make build → make preview → make test-e2e STAGE=production
+# make build → make preview → make test-e2e PHASE=release
 ```
 
 ## 테스트 작성 팁
