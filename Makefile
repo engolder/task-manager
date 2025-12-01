@@ -1,4 +1,4 @@
-.PHONY: dev dev-frontend dev-backend build build-frontend build-backend preview preview-frontend preview-backend test-e2e
+.PHONY: dev dev-frontend dev-backend watch-ios build build-frontend build-backend preview preview-frontend preview-backend test-e2e
 
 # Frontend
 dev-frontend:
@@ -26,6 +26,10 @@ dev:
 	@$(MAKE) dev-backend 2>&1 | sed -u 's/^/backend: /' & \
 	$(MAKE) dev-frontend 2>&1 | sed -u 's/^/frontend: /' & \
 	wait
+
+# iOS simulator
+watch-ios:
+	cd frontend && yarn ios:dev
 
 # Full application (production build)
 build:

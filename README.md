@@ -51,61 +51,27 @@ cd ../backend && go mod download
 ### Development
 
 ```bash
-# Full stack development (from project root)
-make dev
-
-# Frontend only: http://localhost:5173
-make dev-frontend
-
-# Backend only: http://localhost:8080
-make dev-backend
+make dev          # Start backend + web (http://localhost:5173, :8080)
+make watch-ios    # Start iOS simulator
 ```
 
 ## 🧪 Testing
 
 ```bash
-# E2E tests (debug mode - port 5173)
+# E2E tests
 make dev          # Terminal 1
 make test-e2e     # Terminal 2
 
-# E2E tests (release mode - port 4173)
-make build && make preview    # Terminal 1
-make test-e2e PHASE=release   # Terminal 2
+# Production mode
+make build && make preview         # Terminal 1
+make test-e2e PHASE=release        # Terminal 2
 ```
 
 ## 🏗️ Build & Deploy
 
 ```bash
-# Build entire application
-make build
-
-# Run production build
-make preview
-# Frontend: http://localhost:4173
-# Backend: http://localhost:8080
-```
-
-## 🛠️ Available Make Commands
-
-```bash
-# Development
-make dev              # Start full stack
-make dev-frontend     # Start frontend only
-make dev-backend      # Start backend only
-
-# Build
-make build            # Build full application
-make build-frontend   # Build frontend only
-make build-backend    # Build backend only
-
-# Preview (production mode)
-make preview          # Run full stack
-make preview-frontend # Run frontend only
-make preview-backend  # Run backend only
-
-# Testing
-make test-e2e                # E2E tests (debug mode)
-make test-e2e PHASE=release  # E2E tests (release mode)
+make build        # Build application
+make preview      # Run production build (http://localhost:4173, :8080)
 ```
 
 ## 🛠️ Development Commands
