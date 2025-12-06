@@ -65,19 +65,21 @@ export const TasksPage: FC = () => {
   }
 
   return (
-		<div className={styles.container}>
-			<div className={styles.list} data-testid="task-list">
-				{tasks.map((task: Task) => (
-					<TaskItem
-						key={task.id}
-						task={task}
-						onComplete={handleComplete}
-						onDelete={handleDelete}
-					/>
-				))}
-				{tasks.length === 0 && (
-					<div className={styles.empty}>작업이 없습니다.</div>
-				)}
+		<>
+			<div className={styles.container}>
+				<div className={styles.list} data-testid="task-list">
+					{tasks.map((task: Task) => (
+						<TaskItem
+							key={task.id}
+							task={task}
+							onComplete={handleComplete}
+							onDelete={handleDelete}
+						/>
+					))}
+					{tasks.length === 0 && (
+						<div className={styles.empty}>작업이 없습니다.</div>
+					)}
+				</div>
 			</div>
 
 			<form className={styles.form} onSubmit={handleSubmit}>
@@ -97,6 +99,6 @@ export const TasksPage: FC = () => {
 					{createTaskMutation.isPending ? "추가중..." : "추가"}
 				</button>
 			</form>
-		</div>
+		</>
 	);
 }

@@ -3,10 +3,10 @@ import { style } from '@vanilla-extract/css'
 export const container = style({
   maxWidth: "600px",
   margin: "0 auto",
-  paddingTop: "env(safe-area-inset-top, 1rem)", // 상단 Safe Area 적용
-  paddingLeft: "1rem",
-  paddingRight: "1rem",
-  paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 4.5rem + 60px)", // 하단 Safe Area + 입력창 높이 + 네비게이션 높이
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  paddingTop: "env(safe-area-inset-top, 1rem)",
 });
 
 export const header = style({
@@ -24,16 +24,10 @@ export const title = style({
 export const form = style({
   display: "flex",
   gap: "0.5rem",
-  position: "fixed",
-  left: 0,
-  bottom: "60px", // 하단 네비게이션 높이만큼 위로
-  width: "100vw",
-  maxWidth: "600px",
-  margin: "0 auto",
   padding: "1rem",
   background: "#f9fafb",
   borderTop: "1px solid #e5e7eb",
-  zIndex: 10,
+  flexShrink: 0,
 });
 
 export const input = style({
@@ -66,6 +60,11 @@ export const list = style({
   display: 'flex',
   flexDirection: 'column',
   gap: '0.5rem',
+  flex: 1,
+  overflowY: 'auto',
+  minHeight: 0,
+  paddingLeft: '1rem',
+  paddingRight: '1rem',
 })
 
 export const item = style({

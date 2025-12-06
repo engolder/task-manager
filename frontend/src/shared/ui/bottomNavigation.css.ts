@@ -1,16 +1,18 @@
 import { style } from '@vanilla-extract/css';
+import { BOTTOM_NAV_HEIGHT } from './constants';
 
 export const nav = style({
   position: 'fixed',
   bottom: 0,
   left: 0,
   right: 0,
+  height: `calc(${BOTTOM_NAV_HEIGHT}px + env(safe-area-inset-bottom, 0px))`,
   backgroundColor: '#ffffff',
   borderTop: '1px solid #e0e0e0',
   display: 'flex',
   justifyContent: 'space-around',
-  paddingTop: '8px',
-  paddingBottom: 'calc(8px + env(safe-area-inset-bottom))',
+  alignItems: 'center',
+  paddingBottom: 'env(safe-area-inset-bottom, 0px)',
   zIndex: 1000,
 });
 
