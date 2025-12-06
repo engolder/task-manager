@@ -79,42 +79,41 @@ export const item = style({
   border: '1px solid #e5e7eb',
 })
 
-export const checkbox = style({
-  width: '1.25rem',
-  height: '1.25rem',
-  border: '2px solid #e5e7eb',
-  borderRadius: '0.25rem',
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: 'white',
-  ':hover': {
-    borderColor: '#3b82f6',
-  },
-})
-
 export const text = style({
   flex: 1,
   fontSize: '1rem',
   color: '#1f2937',
 })
 
-export const completedText = style({
-  flex: 1,
-  fontSize: '1rem',
-  color: '#9ca3af',
-  textDecoration: 'line-through',
+export const completeButton = style({
+  width: '2rem',
+  height: '2rem',
+  backgroundColor: '#10b981',
+  color: 'white',
+  borderRadius: '0.375rem',
+  border: 'none',
+  fontSize: '1.25rem',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  ':hover': {
+    backgroundColor: '#059669',
+  },
 })
 
 export const deleteButton = style({
-  padding: '0.25rem 0.5rem',
+  width: '2rem',
+  height: '2rem',
   backgroundColor: '#ef4444',
   color: 'white',
-  borderRadius: '0.25rem',
+  borderRadius: '0.375rem',
   border: 'none',
-  fontSize: '0.875rem',
+  fontSize: '1.25rem',
   cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   ':hover': {
     backgroundColor: '#dc2626',
   },

@@ -1,13 +1,18 @@
-import { type FC, useState, type FormEvent } from 'react'
-import { TaskItem } from './TaskItem'
-import { useTasks, useCreateTask, useToggleTask, useDeleteTask } from '../../features/task-list/hooks/useTasks';
+import { useState, type FC, type FormEvent } from "react";
 import type { Task } from "../../entities/task/task";
-import * as styles from './styles.css'
+import {
+	useCreateTask,
+	useDeleteTask,
+	useTasks,
+	useToggleTask,
+} from "../../features/task-list/hooks/useTasks";
+import * as styles from "./styles.css";
+import { TaskItem } from "./TaskItem";
 
 export const TaskList: FC = () => {
   const [newTask, setNewTask] = useState("");
-  
-  const { data: tasks = [], isLoading, error } = useTasks();
+
+  const { data: tasks = [], isLoading, error } = useTasks(false);
   const createTaskMutation = useCreateTask();
   const toggleTaskMutation = useToggleTask();
   const deleteTaskMutation = useDeleteTask();
@@ -24,7 +29,7 @@ export const TaskList: FC = () => {
     }
   };
 
-  const handleToggle = async (id: string) => {
+  const handleComplete = async (id: string) => {
     const task = tasks.find(t => t.id === id);
     if (!task) return;
 
@@ -60,42 +65,38 @@ export const TaskList: FC = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>작업 목록</h1>
-      </header>
+		<div className={styles.container}>
+			<div className={styles.list} data-testid="task-list">
+				{tasks.map((task: Task) => (
+					<TaskItem
+						key={task.id}
+						task={task}
+						onComplete={handleComplete}
+						onDelete={handleDelete}
+					/>
+				))}
+				{tasks.length === 0 && (
+					<div className={styles.empty}>작업이 없습니다.</div>
+				)}
+			</div>
 
-      <div className={styles.list} data-testid="task-list">
-        {tasks.map((task: Task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onToggle={handleToggle}
-            onDelete={handleDelete}
-          />
-        ))}
-        {tasks.length === 0 && (
-          <div className={styles.empty}>작업이 없습니다.</div>
-        )}
-      </div>
-
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className={styles.input}
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          placeholder="작업을 입력하세요"
-          disabled={createTaskMutation.isPending}
-        />
-        <button 
-          type="submit" 
-          className={styles.addButton}
-          disabled={createTaskMutation.isPending}
-        >
-          {createTaskMutation.isPending ? '추가중...' : '추가'}
-        </button>
-      </form>
-    </div>
-  );
+			<form className={styles.form} onSubmit={handleSubmit}>
+				<input
+					type="text"
+					className={styles.input}
+					value={newTask}
+					onChange={(e) => setNewTask(e.target.value)}
+					placeholder="작업을 입력하세요"
+					disabled={createTaskMutation.isPending}
+				/>
+				<button
+					type="submit"
+					className={styles.addButton}
+					disabled={createTaskMutation.isPending}
+				>
+					{createTaskMutation.isPending ? "추가중..." : "추가"}
+				</button>
+			</form>
+		</div>
+	);
 }

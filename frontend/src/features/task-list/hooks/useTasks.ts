@@ -3,10 +3,10 @@ import { taskApi } from '../../../shared/api';
 
 const TASKS_KEY = ['tasks'] as const;
 
-export function useTasks() {
+export function useTasks(completed?: boolean) {
   return useQuery({
-    queryKey: TASKS_KEY,
-    queryFn: taskApi.getAll,
+    queryKey: [...TASKS_KEY, completed],
+    queryFn: () => taskApi.getAll(completed),
   });
 }
 
@@ -20,7 +20,7 @@ export function useTask(id: string) {
 
 export function useCreateTask() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: taskApi.create,
     onSuccess: () => {
@@ -31,7 +31,7 @@ export function useCreateTask() {
 
 export function useUpdateTask() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, input }: { id: string; input: { text?: string; completed?: boolean } }) =>
       taskApi.update(id, input),
@@ -43,7 +43,7 @@ export function useUpdateTask() {
 
 export function useDeleteTask() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: taskApi.delete,
     onSuccess: () => {
@@ -54,7 +54,7 @@ export function useDeleteTask() {
 
 export function useToggleTask() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, completed }: { id: string; completed: boolean }) =>
       taskApi.toggle(id, completed),

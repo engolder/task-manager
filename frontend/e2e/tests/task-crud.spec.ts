@@ -16,7 +16,7 @@ test.describe('Task CRUD Operations', () => {
     await expect(page.getByText(taskText)).toBeVisible();
   });
 
-  test('should toggle task completion status', async ({ page }) => {
+  test('should complete a task and remove it from list', async ({ page }) => {
     const taskText = `Toggle task ${Date.now()}`;
 
     // Create a task
@@ -24,20 +24,15 @@ test.describe('Task CRUD Operations', () => {
     await page.getByRole('button', { name: '추가' }).click();
     await expect(page.getByText(taskText)).toBeVisible();
 
-    // Find the task item and its checkbox
+    // Find the task item and its complete button
     const taskItem = page.getByText(taskText).locator('..');
-    const checkbox = taskItem.locator('button[role="checkbox"]');
+    const completeButton = taskItem.getByRole('button', { name: '완료' });
 
-    // Initially task should be active (not completed)
-    await expect(checkbox).toHaveAttribute('data-state', 'unchecked');
+    // Click complete button
+    await completeButton.click();
 
-    // Toggle to completed
-    await checkbox.click();
-    await expect(checkbox).toHaveAttribute('data-state', 'checked');
-
-    // Toggle back to active
-    await checkbox.click();
-    await expect(checkbox).toHaveAttribute('data-state', 'unchecked');
+    // Task should disappear from incomplete list
+    await expect(page.getByText(taskText)).not.toBeVisible();
   });
 
   test('should delete a task', async ({ page }) => {
@@ -73,15 +68,15 @@ test.describe('Task CRUD Operations', () => {
 
     // Complete first task
     const firstTaskItem = page.getByText(tasks[0]).locator('..');
-    const firstCheckbox = firstTaskItem.locator('button[role="checkbox"]');
-    await firstCheckbox.click();
-    await expect(firstCheckbox).toHaveAttribute('data-state', 'checked');
+    const firstCompleteButton = firstTaskItem.getByRole('button', { name: '완료' });
+    await firstCompleteButton.click();
 
-    // Other tasks should remain active
-    const secondCheckbox = page.getByText(tasks[1]).locator('..').locator('button[role="checkbox"]');
-    const thirdCheckbox = page.getByText(tasks[2]).locator('..').locator('button[role="checkbox"]');
-    await expect(secondCheckbox).toHaveAttribute('data-state', 'unchecked');
-    await expect(thirdCheckbox).toHaveAttribute('data-state', 'unchecked');
+    // First task should disappear
+    await expect(page.getByText(tasks[0])).not.toBeVisible();
+
+    // Other tasks should remain visible
+    await expect(page.getByText(tasks[1])).toBeVisible();
+    await expect(page.getByText(tasks[2])).toBeVisible();
   });
 
   test('should handle empty task input validation', async ({ page }) => {

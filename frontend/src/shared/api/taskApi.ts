@@ -20,8 +20,12 @@ export interface UpdateTaskInput {
 }
 
 export const taskApi = {
-  async getAll(): Promise<Task[]> {
-    const response = await api.get('tasks').json<ApiResponse<Task[]>>();
+  async getAll(completed?: boolean): Promise<Task[]> {
+    const searchParams = new URLSearchParams();
+    if (completed !== undefined) {
+      searchParams.set('completed', completed.toString());
+    }
+    const response = await api.get('tasks', { searchParams }).json<ApiResponse<Task[]>>();
     return response.data;
   },
 
