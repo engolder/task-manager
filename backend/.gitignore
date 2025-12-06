@@ -6,3 +6,7 @@ data/
 
 # Build outputs
 bin/
+
+# Air
+tmp/
+*_build_errors.log
