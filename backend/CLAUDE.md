@@ -88,7 +88,7 @@ backend/
 - **특징**: Domain 인터페이스 구현, 프레임워크 의존적
 - **서브 디렉토리**:
   - `database/`: GORM 연결, 생명주기 관리
-  - `persistence/task/`: TaskRepository 구현, fx.As로 인터페이스 제공
+  - `persistence/task/`: TaskRepository 구현
   - `http/`: Gin 서버, HTTPServer 인터페이스 구현
 
 ### 4. Controller Layer (`internal/controller/http/task/`)
@@ -128,18 +128,13 @@ var Module = fx.Module("usecase.task",
 )
 ```
 
-**인터페이스 제공 패턴** (`persistence/task/module.go`):
+**Repository 제공 패턴** (`persistence/task/module.go`):
 ```go
 var Module = fx.Module("persistence.task",
-    fx.Provide(
-        fx.Annotate(
-            New,
-            fx.As(new(domainTask.Repository)),
-        ),
-    ),
+    fx.Provide(New),
 )
 ```
-- `fx.As`: 구체 타입을 인터페이스로 변환하여 제공
+- `New` 함수가 인터페이스를 반환하므로 Fx가 자동으로 타입 처리
 - UseCase는 구현체가 아닌 인터페이스를 주입받음
 
 **Invoke 패턴** (`controller/http/task/module.go`):
