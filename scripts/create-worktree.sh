@@ -28,18 +28,13 @@ else
   git worktree add -b "$BRANCH" "$WORKTREE_PATH"
 fi
 
-# Create .claude symlink
-echo "Linking Claude configuration..."
-ln -s "$CURRENT_DIR/.claude" "$WORKTREE_PATH/.claude"
+# Link settings.local.json only (commands are managed by git)
+echo "Linking Claude settings..."
+ln -sf "$CURRENT_DIR/.claude/settings.local.json" "$WORKTREE_PATH/.claude/settings.local.json"
 
 echo ""
 echo "✅ Worktree created successfully!"
 echo "   Path: $WORKTREE_PATH"
 echo "   Branch: $BRANCH"
-echo "   Claude config: linked"
+echo "   Claude settings: linked"
 echo ""
-echo "Tip: Run 'make init' to install dependencies"
-echo ""
-
-# Change to worktree directory
-cd "$WORKTREE_PATH" || exit 1
