@@ -6,7 +6,7 @@ export const container = style({
   paddingTop: "env(safe-area-inset-top, 1rem)", // 상단 Safe Area 적용
   paddingLeft: "1rem",
   paddingRight: "1rem",
-  paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 4.5rem)", // 하단 Safe Area + 입력창 높이
+  paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 4.5rem + 60px)", // 하단 Safe Area + 입력창 높이 + 네비게이션 높이
 });
 
 export const header = style({
@@ -26,7 +26,7 @@ export const form = style({
   gap: "0.5rem",
   position: "fixed",
   left: 0,
-  bottom: 0,
+  bottom: "60px", // 하단 네비게이션 높이만큼 위로
   width: "100vw",
   maxWidth: "600px",
   margin: "0 auto",
@@ -34,7 +34,6 @@ export const form = style({
   background: "#f9fafb",
   borderTop: "1px solid #e5e7eb",
   zIndex: 10,
-  paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)",
 });
 
 export const input = style({
