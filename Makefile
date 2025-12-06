@@ -1,4 +1,17 @@
-.PHONY: dev dev-frontend dev-backend watch-ios build build-frontend build-backend preview preview-frontend preview-backend test-e2e
+.PHONY: init init-frontend init-backend dev dev-frontend dev-backend watch-ios build build-frontend build-backend preview preview-frontend preview-backend test-e2e
+
+# Initialize dependencies
+init-frontend:
+	cd frontend && yarn install
+
+init-backend:
+	cd backend && go mod download
+
+init:
+	@echo "Installing dependencies..."
+	@$(MAKE) init-frontend
+	@$(MAKE) init-backend
+	@echo "✅ All dependencies installed"
 
 # Frontend
 dev-frontend:

@@ -42,11 +42,12 @@ task-manager/
 git clone <repository-url>
 cd task-manager
 
-# Install frontend dependencies
-cd frontend && yarn install
+# Install all dependencies
+make init
 
-# Install backend dependencies
-cd ../backend && go mod download
+# Or install separately
+make init-frontend    # Frontend only
+make init-backend     # Backend only
 ```
 
 ### Development
@@ -77,11 +78,35 @@ make preview      # Run production build (http://localhost:4173, :8080)
 
 ## 🛠️ Development Commands
 
+### Make Commands
+```bash
+make init             # Install all dependencies
+make init-frontend    # Install frontend dependencies only
+make init-backend     # Install backend dependencies only
+make dev              # Start development servers (frontend + backend)
+make build            # Build for production
+make preview          # Preview production build
+make test-e2e         # Run E2E tests (PHASE=debug|release)
+```
+
+### Git Worktree Management
+Use `/worktree <branch-name>` command to create isolated workspaces:
+- Creates new worktree at `../task-manager-<branch-name>`
+- Automatically links Claude configuration
+- Enables parallel work on multiple features
+- Detailed guidelines: `.claude/commands/worktree.md`
+
 ### Git and PR Management
 Use `/pr-open` command for Git operations and PR creation:
 - Automatic Git status check and commit creation
 - Auto-generated PR description with user approval process
 - Detailed guidelines: `.claude/commands/pr-open.md`
+
+Use `/pr-merge` command to merge PR and clean up:
+- Merges PR with squash merge and deletes remote branch
+- Automatically switches to main branch and syncs
+- Removes worktree and deletes local feature branch
+- Detailed guidelines: `.claude/commands/pr-merge.md`
 
 ### Documentation Sync
 Use `/guide-sync` command to auto-update documentation:
