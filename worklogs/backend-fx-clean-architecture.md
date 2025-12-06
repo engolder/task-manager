@@ -156,9 +156,8 @@ func RegisterRoutes(server pkgHttp.HTTPServer, handler *Handler) {
 
 **실행 순서**:
 1. HTTP Server 생성 (Fx Module)
-2. Server를 HTTPServer 인터페이스로 제공 (fx.As)
-3. Controller가 HTTPServer 주입받아 RegisterRoutes 호출 (fx.Invoke)
-4. Server 시작 (OnStart 훅)
+2. Controller가 HTTPServer 주입받아 RegisterRoutes 호출 (fx.Invoke)
+3. Server 시작 (OnStart 훅)
 
 ## 의존성 흐름
 

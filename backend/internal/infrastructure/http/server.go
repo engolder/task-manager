@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	pkgConfig "tasklist-backend/pkg/config"
+	pkgHttp "tasklist-backend/pkg/http"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ type Server struct {
 	config *pkgConfig.Config
 }
 
-func New(lc fx.Lifecycle, cfg *pkgConfig.Config) *Server {
+func New(lc fx.Lifecycle, cfg *pkgConfig.Config) pkgHttp.HTTPServer {
 	phase := os.Getenv("PHASE")
 	if phase == "debug" {
 		gin.SetMode(gin.DebugMode)
