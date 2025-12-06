@@ -3,6 +3,7 @@ export interface Task {
   text: string;
   completed: boolean;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface CreateTaskInput {
