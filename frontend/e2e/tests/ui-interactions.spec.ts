@@ -56,18 +56,19 @@ test.describe('UI Interactions', () => {
   });
 
   test('should handle task text with special characters', async ({ page }) => {
+    const timestamp = Date.now();
     const specialChars = [
-      'Task with "quotes"',
-      'Task with <brackets>',
-      'Task with & ampersand',
-      'Task with émojis 🎯',
-      'Task with ñ special chars'
+      `Task with "quotes" ${timestamp}`,
+      `Task with <brackets> ${timestamp}`,
+      `Task with & ampersand ${timestamp}`,
+      `Task with émojis 🎯 ${timestamp}`,
+      `Task with ñ special chars ${timestamp}`
     ];
 
     for (const task of specialChars) {
       await page.getByPlaceholder('작업을 입력하세요').fill(task);
       await page.getByRole('button', { name: '추가' }).click();
-      await expect(page.getByText(task)).toBeVisible();
+      await expect(page.getByText(task, { exact: false })).toBeVisible();
     }
   });
 });

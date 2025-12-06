@@ -217,7 +217,10 @@ func RegisterRoutes(server pkgHttp.HTTPServer, handler *Handler) {
 - `GET /ready` - 서비스 준비 상태 확인 (마이크로서비스용)
 
 ### Task API (v1)
-- `GET /api/v1/tasks` - 전체 할일 목록 조회
+- `GET /api/v1/tasks` - 할일 목록 조회 (쿼리 파라미터로 필터링 가능)
+  - `?completed=true` - 완료된 할일만 조회
+  - `?completed=false` - 미완료 할일만 조회
+  - 파라미터 없음 - 전체 할일 조회
 - `GET /api/v1/tasks/:id` - 특정 할일 조회
 - `POST /api/v1/tasks` - 새 할일 생성
 - `PUT /api/v1/tasks/:id` - 할일 업데이트 (완료 상태, 텍스트 수정)
@@ -398,6 +401,22 @@ PHASE=release ./bin/task-service
 ---
 
 ## 📚 코딩 가이드라인
+
+### 쿼리 파라미터 필터링 패턴
+
+**핵심 원칙:**
+- 포인터 타입 (`*bool`) 사용: nil/true/false 세 가지 상태 구분
+- Gin의 `ShouldBindQuery`로 구조체 바인딩
+- Repository에서 nil 체크 후 조건부 WHERE 절 추가
+
+**레이어별 전달:**
+1. **Controller**: 쿼리 파라미터 → 구조체 바인딩
+2. **UseCase**: 그대로 전달
+3. **Repository**: nil 체크 후 GORM WHERE 절 적용
+
+**참고 파일:**
+- `internal/controller/http/task/handler.go` - GetTasksQuery 구조체
+- `internal/infrastructure/persistence/task/repository.go` - 필터링 로직
 
 ### 네이밍 규칙
 - **패키지명**: 소문자, 단수형 (예: `task`, `config`)

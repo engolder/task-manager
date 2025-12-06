@@ -20,8 +20,8 @@ func New(repo task.Repository) *UseCase {
 	}
 }
 
-func (uc *UseCase) GetAllTasks() ([]task.Task, error) {
-	return uc.repo.GetAll()
+func (uc *UseCase) GetAllTasks(completed *bool) ([]task.Task, error) {
+	return uc.repo.GetAll(completed)
 }
 
 func (uc *UseCase) GetTaskByID(id string) (*task.Task, error) {

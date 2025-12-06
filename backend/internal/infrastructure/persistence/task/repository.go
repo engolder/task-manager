@@ -14,9 +14,15 @@ func New(db *gorm.DB) task.Repository {
 	return &repository{db: db}
 }
 
-func (r *repository) GetAll() ([]task.Task, error) {
+func (r *repository) GetAll(completed *bool) ([]task.Task, error) {
 	var tasks []task.Task
-	err := r.db.Order("created_at DESC").Find(&tasks).Error
+	query := r.db.Order("created_at DESC")
+
+	if completed != nil {
+		query = query.Where("completed = ?", *completed)
+	}
+
+	err := query.Find(&tasks).Error
 	return tasks, err
 }
 

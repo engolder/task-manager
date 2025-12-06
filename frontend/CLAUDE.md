@@ -134,18 +134,20 @@ ios/                # iOS 프로젝트 디렉토리
 // ✅ 좋은 예시
 interface TaskItemProps {
   task: Task;
-  onToggle: (id: string) => void;
+  onComplete: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle }) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete, onDelete }) => {
   return (
-    <div className={styles.container}>
-      <input
-        type="checkbox"
-        checked={task.completed}
-        onChange={() => onToggle(task.id)}
-      />
+    <div className={styles.item}>
       <span className={styles.text}>{task.text}</span>
+      <button onClick={() => onComplete(task.id)} aria-label="완료">
+        ✓
+      </button>
+      <button onClick={() => onDelete(task.id)} aria-label="삭제">
+        ✕
+      </button>
     </div>
   );
 };
@@ -156,48 +158,29 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle }) => {
 - **클라이언트 전역 상태**: Zustand (UI 상태, 설정 등)
 - **서버 상태**: React Query (API 데이터, 캐싱, 동기화)
 
-### React Query 사용 예시
-```typescript
-// features/task-list/hooks/useTasks.ts
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { taskApi } from '../../../shared/api';
+### React Query 필터링 패턴
 
-export function useTasks() {
-  return useQuery({
-    queryKey: ['tasks'],
-    queryFn: taskApi.getAll,
-  });
-}
+**핵심 원칙:**
+- `queryKey`에 필터 파라미터 포함: `['tasks', false]`, `['tasks', true]`, `['tasks']`
+- `invalidateQueries`는 부분 매칭으로 관련 쿼리 자동 무효화
+- 필터 변경 시 자동으로 새로운 쿼리 실행
 
-export function useCreateTask() {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: taskApi.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-    },
-  });
-}
-```
+**Mutation 후 캐시 무효화:**
+- Base key만 사용: `queryClient.invalidateQueries({ queryKey: TASKS_KEY })`
+- 모든 필터 조합 (`['tasks']`, `['tasks', true]`, `['tasks', false]`) 자동 무효화
 
-### API 클라이언트 구조
-```typescript
-// shared/api/taskApi.ts
-import ky from 'ky';
+**참고 파일:**
+- `features/task-list/hooks/useTasks.ts` - 필터링 훅 구현
 
-const api = ky.create({
-  prefixUrl: 'http://localhost:8080/api/v1',
-  headers: { 'Content-Type': 'application/json' },
-});
+### API 클라이언트 쿼리 파라미터 패턴
 
-export const taskApi = {
-  getAll: () => api.get('tasks').json<ApiResponse<Task[]>>(),
-  create: (input: CreateTaskInput) => 
-    api.post('tasks', { json: input }).json<ApiResponse<Task>>(),
-  // ...
-};
-```
+**핵심 원칙:**
+- ky의 `searchParams` 옵션 사용
+- `undefined`일 때는 파라미터 생략 (전체 조회)
+- `URLSearchParams`로 조건부 파라미터 추가
+
+**참고 파일:**
+- `shared/api/taskApi.ts` - getAll 메서드 구현
 
 ### 스타일링 가이드라인
 ```typescript

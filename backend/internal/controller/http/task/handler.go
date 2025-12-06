@@ -17,8 +17,18 @@ func NewHandler(uc *taskUseCase.UseCase) *Handler {
 	return &Handler{useCase: uc}
 }
 
+type GetTasksQuery struct {
+	Completed *bool `form:"completed"`
+}
+
 func (h *Handler) GetTasks(c *gin.Context) {
-	tasks, err := h.useCase.GetAllTasks()
+	var query GetTasksQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	tasks, err := h.useCase.GetAllTasks(query.Completed)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch tasks"})
 		return
