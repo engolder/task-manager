@@ -2,7 +2,7 @@
 
 # task service
 dev-task:
-	PHASE=debug go run cmd/task-service/main.go
+	air -c .air.task.toml
 
 build-task:
 	go build -o bin/task-service cmd/task-service/main.go
