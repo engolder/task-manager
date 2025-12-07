@@ -27,6 +27,18 @@ export default function BottomNavigation() {
         <span className={styles.icon}>🕐</span>
         <span>History</span>
       </NavLink>
+
+      <NavLink
+        to="/search"
+        className={({ isActive }) =>
+          isActive
+            ? `${styles.navItem} ${styles.navItemActive}`
+            : styles.navItem
+        }
+      >
+        <span className={styles.icon}>🔍</span>
+        <span>Search</span>
+      </NavLink>
     </nav>
   );
 }
