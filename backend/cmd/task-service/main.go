@@ -10,6 +10,7 @@ import (
 	taskUseCase "tasklist-backend/internal/usecase/task"
 
 	taskController "tasklist-backend/internal/controller/http/task"
+	searchController "tasklist-backend/internal/controller/http/search"
 
 	"go.uber.org/fx"
 )
@@ -22,5 +23,6 @@ func main() {
 		http.Module,
 		taskUseCase.Module,
 		taskController.Module,
+		searchController.Module,
 	).Run()
 }
