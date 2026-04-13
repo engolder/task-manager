@@ -1,5 +1,3 @@
 # ~/.gitconfig 파일 내용
 [credential]
 	helper = osxkeychain
-[credential]
-	helper = osxkeychain
