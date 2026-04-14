@@ -2,7 +2,7 @@
 
 Full-stack task management application with React frontend, Go backend, and iOS support.
 
-## 🎯 Tech Stack
+## Tech Stack
 
 - **Frontend**: React 19 + TypeScript + Vite
   - Mobile: Capacitor 7.4.2 (iOS 14.0+)
@@ -12,7 +12,7 @@ Full-stack task management application with React frontend, Go backend, and iOS 
 - **Testing**: Playwright (E2E), Vitest (unit)
 - **CI/CD**: GitHub Actions
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 task-manager/
@@ -27,7 +27,7 @@ task-manager/
 └── Makefile         # Development commands
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - **Node.js**: 18+
@@ -57,7 +57,7 @@ make dev          # Start backend + web (http://localhost:5173, :8080)
 make watch-ios    # Start iOS simulator
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # E2E tests
@@ -69,14 +69,14 @@ make build && make preview         # Terminal 1
 make test-e2e PHASE=release        # Terminal 2
 ```
 
-## 🏗️ Build & Deploy
+## Build & Deploy
 
 ```bash
 make build        # Build application
 make preview      # Run production build (http://localhost:4173, :8080)
 ```
 
-## 🛠️ Development Commands
+## Development Commands
 
 ### Make Commands
 ```bash
@@ -110,15 +110,15 @@ Use `/pr-merge` command to merge PR and clean up:
 
 ### Documentation Sync
 Use `/guide-sync` command to auto-update documentation:
-- Analyzes Git changes and updates README or CLAUDE.md accordingly
+- Analyzes Git changes and updates README or WORK_GUIDE.md accordingly
 - **README updates**: Project overview changes (tech stack, architecture, commands)
-- **CLAUDE.md updates**: Implementation details (coding patterns, guidelines)
+- **WORK_GUIDE.md updates**: Implementation details (coding patterns, guidelines)
 - Routes updates to Frontend/Backend/Root documentation
 - Detailed guidelines: `.claude/commands/guide-sync.md`
 
-## 📚 Documentation
+## Documentation
 
 - **Frontend**: See [frontend/README.md](frontend/README.md)
 - **Backend**: See [backend/README.md](backend/README.md)
 - **E2E Testing**: See [frontend/e2e/CLAUDE.md](frontend/e2e/CLAUDE.md)
-- **Claude Code Guide**: See [CLAUDE.md](CLAUDE.md)
+- **작업 가이드**: See [WORK_GUIDE.md](WORK_GUIDE.md)
