@@ -1,3 +1,3 @@
-# 안내
+# Notice
 
-이 문서는 간단한 안내만 제공합니다. 프로젝트 정보와 개발 절차는 `README.md`를 참고하세요.
+This file provides minimal guidance only. Refer to `README.md` for project information and development procedures.

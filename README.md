@@ -89,36 +89,9 @@ make preview          # Preview production build
 make test-e2e         # Run E2E tests (PHASE=debug|release)
 ```
 
-### Git Worktree Management
-Use `/worktree <branch-name>` command to create isolated workspaces:
-- Creates new worktree at `../task-manager-<branch-name>`
-- Automatically links Claude configuration
-- Enables parallel work on multiple features
-- Detailed guidelines: `.claude/commands/worktree.md`
-
-### Git and PR Management
-Use `/pr-open` command for Git operations and PR creation:
-- Automatic Git status check and commit creation
-- Auto-generated PR description with user approval process
-- Detailed guidelines: `.claude/commands/pr-open.md`
-
-Use `/pr-merge` command to merge PR and clean up:
-- Merges PR with squash merge and deletes remote branch
-- Automatically switches to main branch and syncs
-- Removes worktree and deletes local feature branch
-- Detailed guidelines: `.claude/commands/pr-merge.md`
-
-### Documentation Sync
-Use `/guide-sync` command to auto-update documentation:
-- Analyzes Git changes and updates README or WORK_GUIDE.md accordingly
-- **README updates**: Project overview changes (tech stack, architecture, commands)
-- **WORK_GUIDE.md updates**: Implementation details (coding patterns, guidelines)
-- Routes updates to Frontend/Backend/Root documentation
-- Detailed guidelines: `.claude/commands/guide-sync.md`
-
 ## Documentation
 
 - **Frontend**: See [frontend/README.md](frontend/README.md)
 - **Backend**: See [backend/README.md](backend/README.md)
 - **E2E Testing**: See [frontend/e2e/CLAUDE.md](frontend/e2e/CLAUDE.md)
-- **작업 가이드**: See [WORK_GUIDE.md](WORK_GUIDE.md)
+- **Work Guide**: See [WORK_GUIDE.md](WORK_GUIDE.md)
